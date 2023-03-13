@@ -1,2 +1,2 @@
-dvc
-dvc-gdrive
+dvc==2.45.1
+dvc-gdrive==2.19.1
