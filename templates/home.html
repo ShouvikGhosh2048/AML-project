@@ -15,6 +15,7 @@
                 let predictions = document.querySelector('#predictions');
                 let currentImage = document.querySelector('#currentImage');
                 let imageInput = document.querySelector("input[type='file']");
+                let submitInput = document.querySelector("input[type='submit']");
 
                 imageInput.addEventListener('change', () => {
                     let image = currentImage.querySelector('img');
@@ -45,6 +46,9 @@
                     }).then(response => {
                         return response.json()
                     }).then(json => {
+                        imageInput.disabled = false;
+                        submitInput.disabled = false;
+
                         if (json.error) {
                             predictions.innerHTML = '';
                             let error = document.createElement('p');
@@ -63,11 +67,17 @@
                         }
                         predictions.appendChild(list);
                     }).catch(err => {
+                        imageInput.disabled = false;
+                        submitInput.disabled = false;
+
                         predictions.innerHTML = '';
                         let error = document.createElement('p');
                         error.innerText = `ERROR: Couldn't fetch/display the predictions`;
                         predictions.appendChild(error);
                     });
+
+                    imageInput.disabled = true;
+                    submitInput.disabled = true;
                 });
             });
         </script>
