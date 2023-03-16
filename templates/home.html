@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+            * {
+                font-family: sans-serif;
+            }
+        </style>
+        <script>
+            // https://developer.mozilla.org/en-US/docs/Web/API/FormData/Using_FormData_Objects
+            // https://developer.mozilla.org/en-US/docs/Web/API/fetch
+            // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file#examples
+            document.addEventListener('DOMContentLoaded', () => {
+                let form = document.querySelector('form');
+                let predictions = document.querySelector('#predictions');
+                let currentImage = document.querySelector('#currentImage');
+                let imageInput = document.querySelector("input[type='file']");
+
+                imageInput.addEventListener('change', () => {
+                    let image = currentImage.querySelector('img');
+                    if (image) {
+                        let url = image.src;
+                        currentImage.innerHTML = '';
+                        URL.revokeObjectURL(url);
+                    }
+
+                    predictions.innerHTML = '';
+
+                    if (imageInput.files.length === 1) {
+                        let file = imageInput.files[0];
+                        const image = document.createElement('img');
+                        image.width = 300;
+                        image.src = URL.createObjectURL(file);
+                        currentImage.appendChild(image);
+                    }
+                });
+
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    let formData = new FormData(form);
+                    fetch('/api', {
+                        method: 'POST',
+                        body: formData,
+                    }).then(response => {
+                        return response.json()
+                    }).then(json => {
+                        if (json.error) {
+                            predictions.innerHTML = '';
+                            let error = document.createElement('p');
+                            error.innerText = `ERROR: ${json.error}`;
+                            predictions.appendChild(error);
+                            return;
+                        }
+                        
+                        json.predictions.sort((a, b) => b[1] - a[1]);
+                        predictions.innerHTML = '';
+                        let list = document.createElement('ul');
+                        for (const [dogType, prediction] of json.predictions) {
+                            let entry = document.createElement('li');
+                            entry.innerText = `${dogType}: ${prediction}`;
+                            list.appendChild(entry);
+                        }
+                        predictions.appendChild(list);
+                    }).catch(err => {
+                        predictions.innerHTML = '';
+                        let error = document.createElement('p');
+                        error.innerText = `ERROR: Couldn't fetch/display the predictions`;
+                        predictions.appendChild(error);
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h1>Dog image classification</h1>
+        <div id="currentImage"></div>
+        <form method="post" action="/api" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/png, image/jpeg" required/>
+            <input type="submit" value="Predict"/>
+        </form>
+        <h2>Predictions</h2>
+        <div id="predictions"></div>
+    </body>
+</html>
