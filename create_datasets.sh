@@ -20,7 +20,7 @@ do
     mkdir "data/smaller_dataset/train/$DIRECTORY"
     for i in {1..10}
     do
-        cp data/Images/$DIRECTORY/$files[$i] data/smaller_dataset/train/$DIRECTORY/$files[$i]
+        cp data/Images/$DIRECTORY/${files[i]} data/smaller_dataset/train/$DIRECTORY/${files[i]}
     done
     
     # creating validation dataset
@@ -28,6 +28,6 @@ do
     mkdir "data/smaller_dataset/val/$DIRECTORY"
     for i in {11..20}
     do
-        cp data/Images/$DIRECTORY/$files[$i] data/smaller_dataset/val/$DIRECTORY/$files[$i]
+        cp data/Images/$DIRECTORY/${files[i]} data/smaller_dataset/val/$DIRECTORY/${files[i]}
     done
 done
