@@ -1,4 +1,4 @@
-DIRECTORIES=( $(ls data/Images) )
+DIRECTORIES=( $(ls data/tsinghua/low-resolution) )
 
 rm -rf data/smaller_dataset
 mkdir data/smaller_dataset
@@ -13,21 +13,22 @@ mkdir data/smaller_dataset/val
 
 for DIRECTORY in "${DIRECTORIES[@]}"
 do
-    files=( $(ls data/Images/$DIRECTORY) )
+    files=( $(ls data/tsinghua/low-resolution/$DIRECTORY) )
 
     # creating training dataset
-    echo "Copying top 10 files from data/Images/$DIRECTORY to data/smallar_dataset/train/$DIRECTORY" 
+    echo "Copying top 50 files from data/tsinghua/low-resolution/$DIRECTORY to data/smallar_dataset/train/$DIRECTORY"
     mkdir "data/smaller_dataset/train/$DIRECTORY"
-    for i in {1..10}
+    for i in {1..50}
     do
-        cp data/Images/$DIRECTORY/${files[i]} data/smaller_dataset/train/$DIRECTORY/${files[i]}
+        cp data/tsinghua/low-resolution/$DIRECTORY/${files[i]} data/smaller_dataset/train/$DIRECTORY/${files[i]}
     done
-    
+
     # creating validation dataset
-    echo "Copying next 10 files from data/Images/$DIRECTORY to data/smallar_dataset/val/$DIRECTORY" 
+    echo "Copying next 10 files from data/tsinghua/low-resolution/$DIRECTORY to data/smallar_dataset/val/$DIRECTORY"
     mkdir "data/smaller_dataset/val/$DIRECTORY"
-    for i in {11..20}
+    for i in {51..60}
     do
-        cp data/Images/$DIRECTORY/${files[i]} data/smaller_dataset/val/$DIRECTORY/${files[i]}
+        cp data/tsinghua/low-resolution/$DIRECTORY/${files[i]} data/smaller_dataset/val/$DIRECTORY/${files[i]}
     done
 done
+
